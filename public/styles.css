@@ -1,0 +1,86 @@
+/* General Styling */
+
+loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto; /* Center the form horizontally */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+input[type="file"],
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    body, form {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px; /* Slightly larger font for readability */
+    }
+
+    input[type="file"],
+    input[type="text"],
+    select,
+    textarea,
+    button {
+        padding: 15px; /* Larger padding for easy interaction */
+        font-size: 16px; /* Larger font size for readability */
+    }
+
+    label {
+        font-size: 16px; /* Increase label font size for better readability */
+    }
+}

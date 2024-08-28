@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Defect Daily</title>
+    <link rel="stylesheet" href="stylesinspection.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h1>FORM DAILY DEFECT RO</h1>
+
+    <form action="/upload" method="post" enctype="multipart/form-data" id="inspectionForm">
+        <div>
+            <label for="foto">Foto:</label>
+            <input type="file" id="foto" name="foto" required onchange="previewFile()">
+            <img id="previewImg" src="" alt="Image preview" height="200" style="display: none;"><br>
+        </div>
+
+        <div>
+            <label for="id_user">Nama:</label>
+            <select id="id_user" name="id_user" required>
+                <option value="<%= user.id %>"><%= user.name %></option>
+            </select>
+        </div>
+    
+        <div>
+            <label for="id_tipe_lantai">Lantai:</label>
+            <select id="id_tipe_lantai" name="id_tipe_lantai">
+                <option value="">Pilih Lantai</option>
+                <% tipe_lantai.forEach(tl => { %>
+                    <option value="<%= tl.id %>"><%= tl.nama_lantai %></option>
+                <% }); %>
+            </select>
+        </div>
+    
+        <div>
+            <label for="id_kondisi">Work Progress Detail:</label>
+            <select id="id_kondisi" name="id_kondisi">
+                <option value="">Pilih Kondisi</option>
+                <% tipe_kondisi.forEach(tk => { %>
+                    <option value="<%= tk.id %>"><%= tk.nama_kondisi %></option>
+                <% }); %>
+            </select>
+        </div>
+    
+        <div>
+            <label for="catatan">Issue Defect:</label>
+            <textarea id="catatan" name="catatan"></textarea>
+        </div>
+    
+        <div>
+            <label for="target_completion_date">Target Completion Date:</label>
+            <input type="date" id="target_completion_date" name="target_completion_date" required>
+        </div>
+    
+        <div>
+            <label for="id_department">PIC:</label>
+            <select id="id_department" name="id_department">
+                <option value="">Pilih Department</option>
+                <% tipe_department.forEach(department => { %>
+                    <option value="<%= department.id %>"><%= department.nama_department %></option>
+                <% }); %>
+            </select>
+        </div>
+    
+        <button type="submit" id="submitButton">Kirim</button>
+    </form>
+    
+    <div id="messagesContainer"></div>
+
+    <button id="showSavedDataButton" class="mac-style-button">Show Saved Submissions</button>
+    <div id="savedDataContainer" style="display: none;">
+    <h3>Saved Submissions</h3>
+    <ul id="savedDataList" class="saved-submission-list"></ul>
+    </div>
+
+<script>
+function previewFile() {
+            const preview = document.getElementById('previewImg');
+            const file = document.getElementById('foto').files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+                preview.style.display = 'none';
+            }
+        }
+
+    document.getElementById('inspectionForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+    
+        const formData = new FormData(this);
+        const data = {
+            formData: Object.fromEntries(formData.entries()), // Convert FormData to a plain object
+            timestamp: new Date().toISOString()
+        };
+    
+        if (!navigator.onLine) {
+            saveSubmission(data);
+            showNotification('You are offline. Your data has been saved locally.', 'info');
+        } else {
+            submitFormData(data);
+        }
+    
+        // Reset the form fields and allow the user to continue using the form
+        this.reset();
+        document.getElementById('previewImg').src = '';
+        document.getElementById('previewImg').style.display = 'none';
+    });
+    
+    async function submitFormData(data) {
+    showNotification('Submitting form...', 'info'); // Show loading notification
+
+    const formData = new FormData();
+    Object.entries(data.formData).forEach(([key, value]) => formData.append(key, value));
+
+    try {
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification('Form submitted successfully!', 'success');
+        } else {
+            throw new Error(result.message || 'Unknown server error');
+        }
+    } catch (error) {
+        console.error('Error during submission:', error);
+        saveSubmission(data); // Save failed submission
+        showNotification(`Submission failed: ${error.message}. Your data has been saved locally for later submission.`, 'error');
+    }
+}
+
+    document.getElementById('showSavedDataButton').addEventListener('click', () => {
+        const savedDataContainer = document.getElementById('savedDataContainer');
+        const button = document.getElementById('showSavedDataButton');
+    
+        if (savedDataContainer.style.display === 'none') {
+            // Show the saved submissions container
+            showSavedSubmissions();
+            savedDataContainer.style.display = 'block';
+            button.textContent = 'Hide Saved Submissions';
+        } else {
+            // Hide the saved submissions container
+            savedDataContainer.style.display = 'none';
+            button.textContent = 'Show Saved Submissions';
+        }
+    });
+    
+
+    function sendSavedSubmission(submission) {
+    showNotification('Resubmitting saved data...', 'info'); // Notify user of resubmission
+
+    // Reuse the existing submitFormData function to handle the submission
+    submitFormData(submission)
+        .then(() => {
+            deleteSubmission(submission.id); // Remove the submission from IndexedDB if successful
+            showNotification('Saved submission sent successfully!', 'success');
+            showSavedSubmissions(); // Refresh the saved submissions list
+        })
+        .catch(error => {
+            console.error('Failed to send submission:', error);
+            showNotification(`Failed to send saved submission: ${error.message}`, 'error');
+        });
+}
+
+
+    function showSavedSubmissions() {
+    getAllSubmissions().then(submissions => {
+        const savedDataList = document.getElementById('savedDataList');
+        savedDataList.innerHTML = '';
+
+        submissions.forEach(submission => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <div>
+                    <strong>Submission from:</strong> ${submission.timestamp}
+                </div>
+                <div>
+                    <button class="send-btn">Send</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            `;
+
+            // Attach event listeners to buttons
+            listItem.querySelector('.send-btn').addEventListener('click', () => {
+                sendSavedSubmission(submission);
+            });
+
+            listItem.querySelector('.delete-btn').addEventListener('click', () => {
+                deleteSavedSubmission(submission.id, listItem);
+            });
+
+            savedDataList.appendChild(listItem);
+        });
+
+        if (submissions.length === 0) {
+            const noDataMessage = document.createElement('li');
+            noDataMessage.textContent = 'No saved submissions.';
+            noDataMessage.style.textAlign = 'center';
+            noDataMessage.style.color = '#999';
+            savedDataList.appendChild(noDataMessage);
+        }
+    }).catch(error => console.error('Failed to retrieve local submissions:', error));
+}
+
+    function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    
+    document.body.appendChild(notification);
+
+    // Trigger the animation by adding the .show class
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10); // Slight delay to ensure the transition is applied
+
+    // Automatically fade out and remove the notification after 5 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 500); // Match this duration to the CSS transition time
+    }, 450); // Fade out should start at 4.5 seconds to complete by 5 seconds
+}
+
+    function deleteSavedSubmission(id, listItem) {
+        deleteSubmission(id);
+        listItem.remove();
+        alert('Submission deleted.');
+    }
+    
+    // IndexedDB logic
+    function openDatabase() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('submissionDB', 1);
+            request.onupgradeneeded = event => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('submissions')) {
+                    db.createObjectStore('submissions', { keyPath: 'id', autoIncrement: true });
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = event => reject(event.target.error);
+        });
+    }
+    
+    function saveSubmission(data) {
+        openDatabase().then(db => {
+            const transaction = db.transaction('submissions', 'readwrite');
+            const store = transaction.objectStore('submissions');
+            store.add(data);
+        }).catch(error => console.error('Failed to save submission:', error));
+    }
+    
+    function getAllSubmissions() {
+        return new Promise((resolve, reject) => {
+            openDatabase().then(db => {
+                const transaction = db.transaction('submissions', 'readonly');
+                const store = transaction.objectStore('submissions');
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = event => reject(event.target.error);
+            });
+        });
+    }
+    
+    function deleteSubmission(id) {
+        openDatabase().then(db => {
+            const transaction = db.transaction('submissions', 'readwrite');
+            const store = transaction.objectStore('submissions');
+            store.delete(id);
+        }).catch(error => console.error('Failed to delete submission:', error));
+    }
+    </script>
+    
+</body>
+</html>

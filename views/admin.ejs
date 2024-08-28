@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/stylesadmin.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">Admin</div>
+        <div class="links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inspection">Inspection</a>
+            <a href="/admin">Admin</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <main>
+        <div class="tabs">
+            <button class="tab-link active" onclick="openTab(event, 'manageUser')">Manage User</button>
+            <button class="tab-link" onclick="openTab(event, 'manageTipeLantai')">Manage Tipe Lantai</button>
+        </div>
+
+        <div id="manageUser" class="tab-content active">
+            <div class="table-container">
+                <div class="data-table">
+                    <h2>Manage User</h2>
+                    <button onclick="window.location.href='/add-user-form';">Add User</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (user && Array.isArray(user) && user.length > 0) { %>
+                                <% user.forEach(item => { %>
+                                    <tr>
+                                        <td><%= item.id %></td>
+                                        <td><%= item.name %></td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button onclick="window.location.href='/edit-user-form/<%= item.id %>';">Edit</button>
+                                                <form method="POST" action="/delete-user" style="display: inline;">
+                                                    <input type="hidden" name="id" value="<%= item.id %>">
+                                                    <button type="submit">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3">No users found</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="manageTipeLantai" class="tab-content">
+            <div class="table-container">
+                <div class="data-table">
+                    <h2>Manage Tipe Lantai</h2>
+                    <button onclick="window.location.href='/add-tipe-lantai-form';">Add Tipe Lantai</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Floor Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (tipe_lantai && Array.isArray(tipe_lantai) && tipe_lantai.length > 0) { %>
+                                <% tipe_lantai.forEach(item => { %>
+                                    <tr>
+                                        <td><%= item.id %></td>
+                                        <td><%= item.nama_lantai %></td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button onclick="window.location.href='/edit-tipe-lantai-form/<%= item.id %>';">Edit</button>
+                                                <form method="POST" action="/delete-tipe-lantai" style="display: inline;">
+                                                    <input type="hidden" name="id" value="<%= item.id %>">
+                                                    <button type="submit">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3">No floor types found</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function openTab(event, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.className += " active";
+        }
+
+        // Initialize the first tab to be active on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".tab-link").click();
+        });
+    </script>
+</body>
+</html>

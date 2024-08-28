@@ -1,0 +1,284 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f5f5f7;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #007aff;
+    font-weight: 500;
+    padding: 10px 15px;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: #f0f0f5;
+    border-radius: 4px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+form div {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+input[type="file"],
+select,
+textarea,
+input[type="date"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #d1d1d6;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+input[type="file"] {
+    padding: 5px;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+button[type="submit"] {
+    background-color: #007aff;
+    color: #ffffff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    width: 100%;
+    font-weight: 600;
+}
+
+button[type="submit"]:hover {
+    background-color: #005eb8;
+}
+
+button[type="submit"]:disabled {
+    background-color: #a3c9ff;
+    cursor: not-allowed;
+}
+
+img#previewImg {
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* General message styles */
+.message {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Base Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-size: 16px;
+    color: #333;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: translateY(-10px);
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+/* Notification Type Styles */
+.notification.info {
+    background-color: #e6f7ff;
+    border-left: 4px solid #007bff;
+    color: #007bff;
+}
+
+.notification.success {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+    color: #28a745;
+}
+
+.notification.error {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    color: #dc3545;
+}
+
+/* Make the notification visible */
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Close Button (optional enhancement) */
+.notification .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.notification .close-btn:hover {
+    opacity: 0.7;
+}
+
+
+
+/* Style for the saved submissions container */
+#savedDataContainer {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+#savedDataContainer h3 {
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Style for the saved submissions list */
+.saved-submission-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.saved-submission-list li {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Style for action buttons in the saved submissions list */
+.saved-submission-list button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.saved-submission-list button.send-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.saved-submission-list button.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.saved-submission-list button:hover {
+    opacity: 0.9;
+}
+
+/* Style for notifications */
+/* Notification Styles */
+/* Notification Styles */
+
+/* 
+button for saved  */
+.mac-style-button {
+    background-color: #007aff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    appearance: none; /* Remove default button styles */
+    display: inline-block;
+    text-align: center;
+    min-width: 200px; /* Ensure a consistent button width */
+}
+
+.mac-style-button:hover {
+    background-color: #005eb8;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.mac-style-button:active {
+    background-color: #004a94;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mac-style-button:focus {
+    outline: none; /* Remove the default focus outline */
+    box-shadow: 0px 0px 0px 3px rgba(0, 122, 255, 0.5); /* Add a focus ring similar to macOS */
+}

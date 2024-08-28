@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Tipe HB</title>
+    <link rel="stylesheet" href="/stylesadmin.css">
+</head>
+<body>
+    <h1>Edit Tipe HB</h1>
+    <form action="/admin/tipe_hb/update/<%= tipeHb.id %>" method="post">
+        <label for="nama_tipe">HB Type:</label>
+        <input type="text" id="nama_tipe" name="nama_tipe" value="<%= tipeHb.nama_tipe %>" required>
+        <button type="submit">Update</button>
+    </form>
+    <button onclick="window.location.href='/admin';">Cancel</button>
+</body>
+</html>

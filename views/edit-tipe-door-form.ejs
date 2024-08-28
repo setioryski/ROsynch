@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Tipe Door</title>
+    <link rel="stylesheet" href="/stylesadmin.css">
+</head>
+<body>
+    <h1>Edit Tipe Door</h1>
+    <form action="/admin/tipe_door/update/<%= tipeDoor.id %>" method="post">
+        <label for="nama_tipe">Door Type:</label>
+        <input type="text" id="nama_tipe" name="nama_tipe" value="<%= tipeDoor.nama_tipe %>" required>
+        <button type="submit">Update</button>
+    </form>
+    <button onclick="window.location.href='/admin';">Cancel</button>
+</body>
+</html>

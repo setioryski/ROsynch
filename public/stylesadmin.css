@@ -1,0 +1,212 @@
+/* General Styling */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f2f2f7;
+    color: #333;
+    margin: 0;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0; /* Prevent the navbar from shrinking */
+    width: 100%;
+}
+
+.navbar .logo {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.navbar .links {
+    display: flex;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 0 15px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Main content styling */
+main {
+    display: flex;
+    flex: 1; /* Main content takes up remaining space */
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Tabs container */
+.tabs {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid #007bff;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    background-color: #f2f2f7;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.tabs button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.tabs button:hover {
+    background-color: #ddd;
+}
+
+/* Tab content styling */
+.tab-content {
+    flex: 1; /* Allow tab content to grow and fill the space */
+    display: none;
+    padding: 20px;
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Data table styling */
+.data-table {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling for the table */
+}
+
+/* Adjust the table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Button styling */
+button {
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Form styling */
+form {
+    display: inline;
+}
+
+/* Action buttons container */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Add space between edit and delete buttons */
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar for horizontal scrolling */
+}
+
+::-webkit-scrollbar-track {
+    background: #f2f2f7; /* Background of the scrollbar track */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #007bff; /* Color of the scrollbar handle */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid #f2f2f7; /* Adds a small gap around the scrollbar handle */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+::-webkit-scrollbar-corner {
+    background-color: #f2f2f7; /* Corner color for the scrollbar intersection */
+}
+
+/* Ensures the scrollbar works across different browsers */
+.scroll-container {
+    scrollbar-width: thin; /* Firefox specific: makes the scrollbar thinner */
+    scrollbar-color: #007bff #f2f2f7; /* Firefox specific: scrollbar color */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .data-table {
+        min-width: 100%;
+    }
+
+    .data-table h2 {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .data-table h2 button {
+        margin-top: 10px;
+        margin-left: 0;
+    }
+}
+
+/* Ensure consistent column widths */
+th, td:nth-child(1) {
+    width: 10%;
+}
+th, td:nth-child(2) {
+    width: 70%;
+}
+th, td:nth-child(3) {
+    width: 20%;
+    text-align: center;
+}

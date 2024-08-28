@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Tipe Aset</title>
+</body>
+<body>
+    <h1>Edit Tipe Aset</h1>
+    <form action="/update-tipe-aset" method="post">
+        <input type="hidden" name="id" value="<%= tipe_aset.id %>">
+        <label for="nama_tipe">Type Name:</label>
+        <input type="text" id="nama_tipe" name="nama_tipe" value="<%= tipe_aset.nama_tipe %>" required>
+        <button type="submit">Update</button>
+    </form>
+    <a href="/admin">Back to Admin Dashboard</a>
+</body>
+</html>

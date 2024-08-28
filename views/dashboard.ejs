@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/stylesdashboard.css"> <!-- Link to the CSS file -->
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/inspection">Inspection</a></li>
+            <li><a href="/logOut">Log Out</a></li>
+        </ul>
+    </nav>
+
+    <h1>Dashboard</h1>
+    <div class="dashboard-container">
+        <!-- Filter Form Container -->
+        <div class="filter-container">
+            <form action="/dashboard" method="get" class="date-picker-form">
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" name="startDate" value="<%= startDate %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" name="endDate" value="<%= endDate %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kondisi">Kondisi:</label>
+                    <select id="kondisi" name="kondisi">
+                        <option value="">All Conditions</option>
+                        <% kondisiOptions.forEach(option => { %>
+                            <option value="<%= option.nama_kondisi %>" <%= kondisi === option.nama_kondisi ? 'selected' : '' %>><%= option.nama_kondisi %></option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="filter-button">Filter</button>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="export-button" id="exportPDF">Export to PDF</button>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="export-button" id="exportExcel">Export to Excel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Asset Table -->
+        <table id="assetsTable">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>LANTAI</th>
+                    <th>ISSUE DEFECT</th>
+                    <th>FINDING PICTURE</th>
+                    <th>PIC</th>
+                    <th>FINDING DATE</th>
+                    <th>WORK PROGRESS DETAIL</th>
+                    <th>TARGET COMPLETION</th>
+                    <th>STATUS</th>
+                    <th>KETERANGAN</th>
+                    <th>COMPLETED PICTURE</th>
+                    <th>COMPLETION DATE</th>
+                    <th>ACTION</th> <!-- Action button column -->
+                </tr>
+            </thead>
+            <tbody>
+                <% assets.forEach(asset => { %>
+                    <tr>
+                        <td><%= asset.id %></td>
+                        <td><%= asset.nama_lantai %></td>
+                        <td><%= asset.catatan %></td>
+                        <td>
+                            <% if (asset.foto) { %>
+                                <img src="<%= asset.foto %>" alt="Finding Photo" style="width:100px;">
+                            <% } else { %>
+                                No Image Available
+                            <% } %>
+                        </td>
+                        <td><%= asset.nama_department %></td> <!-- PIC (Assuming PIC stands for Person In Charge or similar) -->
+                        <td><%= new Date(asset.tanggal_dibuat).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                        <td><%= asset.nama_kondisi %></td> <!-- WORK PROGRESS DETAIL -->
+                        <td><%= asset.target_completion_date ? new Date(asset.target_completion_date).toLocaleDateString('id-ID') : 'Not Set' %></td>
+                        <td><%= asset.status %></td>
+                        <td><%= asset.keterangan %></td>
+                        <td>
+                            <% if (asset.completed_photo) { %>
+                                <img src="<%= asset.completed_photo %>" alt="Completed Photo" style="width:100px;">
+                            <% } else { %>
+                                No Completed Image
+                            <% } %>
+                        </td>                        
+                        
+                        <td><%= asset.completion_date ? new Date(asset.completion_date).toLocaleDateString('id-ID') : 'Not Set' %></td>
+                        <td>
+                            <a href="/uploadupdate/<%= asset.id %>" class="btn btn-primary">Update</a>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+
+            const currentDate = new Date();
+            const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+            const formatDate = (date) => {
+                let day = date.getDate();
+                let month = date.getMonth() + 1; // Months are zero-based
+                const year = date.getFullYear();
+
+                if (day < 10) {
+                    day = '0' + day;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                return `${year}-${month}-${day}`;
+            };
+
+            startDateInput.value = formatDate(firstDayOfMonth);
+            endDateInput.value = formatDate(lastDayOfMonth);
+
+            // Validate dates
+            const validateDates = () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                if (startDate > endDate) {
+                    alert('End Date must be later than Start Date.');
+                    return false;
+                }
+                return true;
+            };
+
+            startDateInput.addEventListener('change', validateDates);
+            endDateInput.addEventListener('change', validateDates);
+
+            document.getElementById('exportPDF').addEventListener('click', function() {
+                window.print();
+            });
+
+            document.getElementById('exportExcel').addEventListener('click', function() {
+                window.location.href = `/export/excel?startDate=${startDateInput.value}&endDate=${endDateInput.value}&kondisi=${document.getElementById('kondisi').value}`;
+            });
+        });
+    </script>
+</body>
+</html>
